@@ -1,0 +1,64 @@
+@import "./normalize.css";
+@import "./font/iconfont.css";
+
+/* 获取根元素 */
+:root {
+  /* CSS定义变量*/
+  --color-text: #666;
+  --color-high-text: #ff5777;
+  --color-tint: #ff8189;
+  --color-background: #fff;
+  --font-size: 14px;
+  --line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue", helvetica, "Microsoft YaHei", Arial, sans-serif;
+  /* 禁止用户鼠标在页面上选中文字 */
+  user-select: none;
+  /* webkit是苹果浏览器引擎，tap店家，hignlight背景高亮，color颜色，颜色用数值调节 */
+  -webkit-tap-highlight-color: transparent;
+  background: var(--color-background);
+  color: var(--color-text);
+  /* rem vm/vh */
+  width: 100vm;
+
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.clear-fix::after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+.clear-fix {
+  zoom: 1;
+}
+
+.left {
+  float: left;
+}
+
+.fight {
+  float: right;
+}
+
+img {
+  width: 100%;
+  /*    max-width: 100%;
+    max-height: 100%; */
+  height: auto;
+}
