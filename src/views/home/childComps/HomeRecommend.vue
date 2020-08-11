@@ -1,10 +1,10 @@
 <!-- 推荐信息组件(位于轮播图组件下面) -->
 <template>
   <div class="recommend">
-    <div v-for="item in recommends" :key="item.sort" class="recommend-item">
-      <a :href="item.link" class="item-link">
-        <img :src="item.image" :alt="item.title" class="item-img">
-        <div class="item-title">{{item.title}}</div>
+    <div v-for="item in cateList" :key="item.sort" class="recommend-item">
+      <a :href="item.navigation_url" class="item-link">
+        <img :src="item.image_src" :alt="item.name" class="item-img">
+        <div class="item-title" :class="{'title-hidden': titleHidden }">{{item.name}}</div>
       </a>
     </div>
   </div>
@@ -14,10 +14,16 @@
   export default {
     name: 'HomeRecommend',
     props: {
-      recommends: {
+      cateList: {
         type: Array,
         default () {
           return []
+        }
+      },
+      titleHidden: {
+        type: Boolean,
+        default() {
+          return false
         }
       }
     }
@@ -53,5 +59,9 @@
 
   .item-title {
     font-size: 13px;
+  }
+
+  .title-hidden {
+    display: none;
   }
 </style>

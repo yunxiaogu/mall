@@ -1,5 +1,8 @@
+<!-- 分类组件 -->
 <template>
-  <h3>分类</h3>
+  <div class="category">
+
+  </div>
 </template>
 
 <script>
@@ -9,5 +12,5 @@
 </script>
 
 <style scoped>
-  
+
 </style>

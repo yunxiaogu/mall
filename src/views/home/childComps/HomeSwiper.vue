@@ -1,10 +1,10 @@
 <!-- 轮播图组件 -->
 <template>
     <el-carousel :interval="5000" arrow="always" height="150px">
-      <el-carousel-item v-for="item in banners" :key="item.title">
+      <el-carousel-item v-for="item in swiperList" :key="item.title">
         <div class="img-wrap">
-          <a :href="item.link">
-            <img :src="item.image" alt="">
+          <a :href="item.navigation">
+            <img :src="item.image_src" alt="item.goods_id">
           </a>
         </div>
       </el-carousel-item>
@@ -15,7 +15,7 @@
   export default {
     name: 'HomeSwiper',
     props: {
-      banners : {
+      swiperList : {
         type: Array,
         default() {
           return []
