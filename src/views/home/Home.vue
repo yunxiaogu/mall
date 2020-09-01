@@ -6,16 +6,20 @@
       <div slot="center">购物街</div>
     </NavBar>
 
+    <!-- 商品种类切换 -->
+    <TabControl ref="tabControlFixed" :titles="goodsTitles" @tabClick="tabClick" class="tab-control" v-show="isTabFixed"></TabControl>
+
     <!-- 滚动组件 -->
-    <Scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll" :pull-up-load="true" @pullUpLoad="loadMore">
+    <Scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll" :bounce="false" :pull-up-load="true"
+      @pullingUp="loadMore">
       <!-- 轮播图 -->
-      <HomeSwiper :swiperList="swiperList"></HomeSwiper>
+      <HomeSwiper :swiperList="swiperList" @swiperImageLoad="swiperImageLoad"></HomeSwiper>
       <!-- 导航信息 -->
       <HomeRecommend :cateList="cateList" :title-hidden="true"></HomeRecommend>
       <!-- 流行 -->
       <!-- <PopularView></PopularView> -->
       <!-- 商品种类切换 -->
-      <TabControl :titles="goodsTitles" class="tab-control" @tabClick="tabClick"></TabControl>
+      <TabControl ref="tabControl" :titles="goodsTitles" @tabClick="tabClick" :class="{fixed: isTabFixed}"></TabControl>
       <!-- 商品列表 -->
       <GoodsList :goodsList="goods[goodType].list"></GoodsList>
     </Scroll>
@@ -42,8 +46,15 @@
   import {
     getSwiperData,
     getCateData,
-    getFloorData
+    getFloorData,
+    getCategoryData
   } from "network/home.js"
+
+
+  // 导入工具函数
+  import {
+    debounce
+  } from "common/util.js"
 
   // 导入静态网络数据
   import {
@@ -65,6 +76,8 @@
         floorData: [],
         // 商品类别名称
         goodsTitles: [],
+        // 分类
+        categories: [],
         // 根据点击商品类别，获取index、type
         goodIndex: 0,
         goodType: 'pop',
@@ -83,7 +96,13 @@
           } // 页数、精选商品
         },
         // 是否显示返回顶部
-        backTopShow: false
+        backTopShow: false,
+        // 距离顶部的距离
+        tabOffsetTop: 0,
+        // 默认tabControl不需要吸顶
+        isTabFixed: false,
+        // 记录组件离开时的位置
+        saveY: 0
       }
     },
     components: {
@@ -102,11 +121,26 @@
       // this.getSwiperData()
       // this.getCateData()
       // this.getFloorData()
+
       // 网络请求用本地数据代替
       this.swiperList = swiperData
       this.cateList = cateData
       this.goodsTitles = catalogData
       this.floorData = floorData
+
+      getCategoryData().then((res) => {
+        this.categories = res
+      })
+    },
+    destroyed() {
+      console.log('组件销毁');
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 300)
+      this.$refs.scroll.refresh()
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY()
     },
     mounted() {
       // 将数据填充到goods: {}
@@ -115,6 +149,15 @@
       this.goods['pop'].list = [...this.floorData[0]]
       this.goods['new'].list = [...this.floorData[1]]
       this.goods['sell'].list = [...this.floorData[2]]
+
+      // refresh虽然是局部变量，但是不会被销毁，因为refresh在下面的函数中引用了，形成了闭包
+      const refresh = debounce(this.$refs.scroll.refresh, 150)
+      // 监听item图片加载完成，事件由GoodsListItem发出
+      this.$bus.$on('itemImageLoad', () => {
+        // 重新刷新，让better-scroll重新计算可滚动高度
+        // this.$refs.scroll.refresh()
+        refresh()
+      })
     },
     methods: {
       /*
@@ -124,17 +167,24 @@
       tabClick(index) {
         this.goodIndex = index
         this.goodType = index == 0 ? 'pop' : (index == 1 ? 'new' : (index == 2 ? 'sell' : 'pop'))
+        // 使两个tabControl的index保持一致
+        this.$refs.tabControlFixed.currentIndex = index
       },
       // 监听 回到顶部 按钮
       contentScroll(position) {
+        // 决定 返回顶部图标 是否显示
         this.backTopShow = position.y < -350
+        // 决定tabControl是否吸顶(position:fixed)
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       // 监听 上拉加载更多
       loadMore() {
         // 根据index判断应该加载那个种类的商品
         this.getFloorDataBy(this.goodIndex, this.goodType)
-        // 刷新，避免better-scroll计算的高度因为异步加载的图片还没过来而出现错误
-        // this.$refs.scroll.refresh()
+      },
+      // 轮播图加载完成
+      swiperImageLoad() {
+        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop - 44
       },
       /*
         网络请求
@@ -168,7 +218,9 @@
         const page = this.goods[type].page + 1
         this.goods[type].list.push(...this.floorData[index])
         this.goods[type].page += 1
-        // 结束本次上拉加载，不然只能加载一次
+
+        // 刷新，避免better-scroll计算的高度因为异步加载的图片还没过来而出现错误
+        // this.$refs.scroll.refresh()
         this.$refs.scroll.finishPullUp()
       },
       // 回到顶部
@@ -192,25 +244,32 @@
   }
 
   .home-nav {
-    position: fixed;
+    /* 在使用浏览器原生滚动时，为了让导航不跟随一起滚动，所以进行绝对定位，
+    当使用better-scroll时，由于使用了局部滚动，所以可以清除position: fixed; */
+    /*    position: fixed;
     left: 0;
     right: 0;
     top: 0;
-    z-index: 20;
+    z-index: 20;*/
     background-color: var(--color-tint);
     color: #fff;
   }
 
   .tab-control {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 42px;
-    background-color: #ffffff;
+    position: relative;
+    z-index: 10;
+  }
+
+  .fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
   }
 
   .content {
     height: calc(100% - 93px);
-    margin-top: 44px;
+    /* margin-top: 44px; */
 
     /*    position: absolute;
     top: 44px;

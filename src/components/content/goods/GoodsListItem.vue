@@ -1,8 +1,8 @@
 <!-- 商品列表中的单项 -->
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <div class="goods-item-img">
-      <img :src="goodsItem.image_src" :alt="goodsItem.name">
+      <img :src="goodsItem.image_src" :alt="goodsItem.name" @load="imageLoad">
     </div>
     <div class="goods-item-title">
       <p>{{goodsItem.name}}</p>
@@ -19,6 +19,20 @@
         default () {
           return {}
         }
+      }
+    },
+    methods: {
+      // 点击事件
+      itemClick() {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            goods_id: this.goodsItem.cat_id
+          }
+        })
+      },
+      imageLoad() {
+        this.$bus.$emit('itemImageLoad')
       }
     }
   }
@@ -50,8 +64,15 @@
   }
 
   .goods-item-title {
+    width: 100%;
     font-size: 14px;
     text-align: center;
     margin-top: 6px;
+  }
+
+  .goods-item-title p {
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
   }
 </style>

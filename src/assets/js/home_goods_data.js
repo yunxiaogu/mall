@@ -49,30 +49,35 @@ const catalogData = [{
 const floorData = [
   [{
     "name": "优质服饰",
+    "cat_id": 5,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor01_1@2x.png",
     "image_width": "232",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=服饰"
   }, {
     "name": "春季热门",
+    "cat_id": 6,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor01_2@2x.png",
     "image_width": "233",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=热"
   }, {
     "name": "爆款清仓",
+    "cat_id": 8,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor01_3@2x.png",
     "image_width": "233",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=爆款"
   }, {
     "name": "倒春寒",
+    "cat_id": 9,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor01_4@2x.png",
     "image_width": "233",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=春季"
   }, {
     "name": "怦然心动",
+    "cat_id": 10,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor01_5@2x.png",
     "image_width": "233",
     "open_type": "navigate",
@@ -80,30 +85,35 @@ const floorData = [
   }],
   [{
     "name": "勇往直前",
+    "cat_id": 11,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor02_1@2x.png",
     "image_width": "232",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=户外"
   }, {
     "name": "户外登山包",
+    "cat_id": 12,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor02_2@2x.png",
     "image_width": "273",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=登山包"
   }, {
     "name": "超强手套",
+    "cat_id": 13,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor02_3@2x.png",
     "image_width": "193",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=手套"
   }, {
     "name": "户外运动鞋",
+    "cat_id": 14,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor02_4@2x.png",
     "image_width": "193",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=运动鞋"
   }, {
     "name": "冲锋衣系列",
+    "cat_id": 15,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor02_5@2x.png",
     "image_width": "273",
     "open_type": "navigate",
@@ -111,36 +121,43 @@ const floorData = [
   }],
   [{
     "name": "清新气质",
+    "cat_id": 16,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor03_1@2x.png",
     "image_width": "232",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=饰品"
   }, {
     "name": "复古胸针",
+    "cat_id": 17,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor03_2@2x.png",
     "image_width": "263",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=胸针"
   }, {
     "name": "韩版手链",
+    "cat_id": 18,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor03_3@2x.png",
     "image_width": "203",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=手链"
   }, {
     "name": "水晶项链",
+    "cat_id": 19,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor03_4@2x.png",
     "image_width": "193",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=水晶项链"
   }, {
     "name": "情侣表",
+    "cat_id": 20,
     "image_src": "https://api-hmugo-web.itheima.net/pyg/pic_floor03_5@2x.png",
     "image_width": "273",
     "open_type": "navigate",
     "navigator_url": "/pages/goods_list?query=情侣表"
   }]
 ]
+
+
 
 export {
   swiperData,

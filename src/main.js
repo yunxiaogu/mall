@@ -11,6 +11,9 @@ import element from './element/index.js'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(element)
 
+// 事件总线
+Vue.prototype.$bus = new Vue()
+
 Vue.config.productionTip = false
 
 new Vue({

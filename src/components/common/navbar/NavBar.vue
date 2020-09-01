@@ -57,7 +57,7 @@
     /* background-color: green; */
   }
 
-  .home-nav {
+/*  .home-nav {
     background-color: var()
-  }
+  } */
 </style>

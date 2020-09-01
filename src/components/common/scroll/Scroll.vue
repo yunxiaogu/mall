@@ -14,6 +14,10 @@
   export default {
     name: 'Scroll',
     props: {
+      bounce: {
+        type: Boolean,
+        default: true
+      },
       probeType: {
         type: Number,
         default: 0
@@ -33,6 +37,7 @@
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true,
         scrollbar: false,
+        bounce: this.bounce,
         probeType: this.probeType,
         pullUpLoad: this.pullUpLoad
       })
@@ -43,24 +48,36 @@
         this.$emit('scroll', position)
       })
 
-      // 监听上拉事件
-      this.scroll.on('pullingUp', () => {
-        // 将上拉加载数据事件发出去
-        this.$emit('pullUpLoad')
-      })
+      // 监听上拉加载
+      if(this.probeType == 2 || this.probeType ==3) {
+        this.scroll.on('pullingUp', () => {
+          this.$emit('pullingUp')
+        })
+      }
+
+      // 监听滚动到底部
+      if(this.pullUpLoad) {
+        this.scroll.on('pullingUp', () => {
+          // 滚动到底部了，但是需要外部组件知道跑，传递出去
+          this.$emit('pulingUp')
+        })
+      }
     },
     methods: {
       // 将scroolTo方法暴露出去
       scrollTo(x, y, time) {
-        this.scroll.scrollTo(x, y, time)
+        this.scroll && this.scroll.scrollTo(x, y, time)
       },
       // 结束上拉操作
       finishPullUp() {
-        this.scroll.finishPullUp()
+        this.scroll && this.scroll && this.scroll.finishPullUp()
       },
       // 刷新
       refresh() {
-        this.scroll.refresh()
+        this.scroll && this.scroll.refresh()
+      },
+      getScrollY() {
+        return this.scroll ? this.scroll.y : 0
       }
     }
   }

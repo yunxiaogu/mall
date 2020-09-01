@@ -5,14 +5,16 @@
 import {
   Carousel,
   CarouselItem,
-  Button
+  Button,
+  Image
 } from 'element-ui'
 
 const element = {
   install(Vue) {
     Vue.use(Carousel),
     Vue.use(Button),
-    Vue.use(CarouselItem)
+    Vue.use(CarouselItem),
+    Vue.use(Image)
   }
 }
 

@@ -4,7 +4,7 @@
       <el-carousel-item v-for="item in swiperList" :key="item.title">
         <div class="img-wrap">
           <a :href="item.navigation">
-            <img :src="item.image_src" alt="item.goods_id">
+            <img :src="item.image_src" alt="item.goods_id" @load="imageLoad">
           </a>
         </div>
       </el-carousel-item>
@@ -14,11 +14,24 @@
 <script>
   export default {
     name: 'HomeSwiper',
+    data() {
+      return {
+        isLoad: false
+      }
+    },
     props: {
       swiperList : {
         type: Array,
         default() {
           return []
+        }
+      }
+    },
+    methods: {
+      imageLoad() {
+        if(!this.isLoad) {
+          this.$emit('swiperImageLoad')
+          this.isLoad = true
         }
       }
     }

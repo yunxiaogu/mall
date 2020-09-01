@@ -74,3 +74,10 @@ export function getFloorData() {
     url: '/home/floordata'
   })
 }
+
+// 商品分类
+export function getCategoryData() {
+  return request({
+    url: '/categories'
+  })
+}
