@@ -24,6 +24,10 @@
     name: 'DetailInfo',
     props: {
       goodsInfo: {}
+    },
+    mounted() {
+      // 向父组件发出一次更新请求
+      this.$emit('detailImgLoad')
     }
   }
 </script>

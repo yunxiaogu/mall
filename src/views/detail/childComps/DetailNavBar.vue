@@ -5,7 +5,7 @@
         <span class="iconfont icon-back"></span>
       </div>
       <div slot="center" class="title">
-        <div v-for="(item, index) in titles" class="title-item" :class="{active: currentIndex === index}" @click="itemClick(index)">
+        <div v-for="(item, index) in titles" :key="item" class="title-item" :class="{active: currentIndex == index}" @click="itemClick(index)">
           {{item}}
         </div>
       </div>
@@ -17,9 +17,16 @@
 
   export default {
     name: 'DetailNavBar',
+    props: {
+      titles: {
+        type: Array,
+        default() {
+          return []
+        }
+      }
+    },
     data() {
       return {
-        titles: ['商品', '参数', '评论', '推荐'],
         currentIndex: 0
       }
     },
@@ -29,6 +36,8 @@
     methods: {
       itemClick(index) {
         this.currentIndex = index
+        // 将点击到的索引传出去
+        this.$emit('itemClick', index)
       },
       // 返回点击
       backClick() {
@@ -42,7 +51,7 @@
   .nav_bar {
     background-color: #FFFFFF;
   }
-  
+
   .icon {
     width: 100%;
     height: 100%;

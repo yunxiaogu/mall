@@ -6,7 +6,10 @@ import {
   Carousel,
   CarouselItem,
   Button,
-  Image
+  Image,
+  Avatar,
+  Row,
+  Col
 } from 'element-ui'
 
 const element = {
@@ -14,7 +17,10 @@ const element = {
     Vue.use(Carousel),
     Vue.use(Button),
     Vue.use(CarouselItem),
-    Vue.use(Image)
+    Vue.use(Image),
+    Vue.use(Avatar),
+    Vue.use(Row),
+    Vue.use(Col)
   }
 }
 

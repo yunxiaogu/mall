@@ -25,7 +25,7 @@
     </Scroll>
 
     <!-- 回到顶部 -->
-    <BackTop @click.native="backClick" v-show="backTopShow"></BackTop>
+    <BackTop @click.native="backTop" v-show="isShowBackTop"></BackTop>
   </div>
 </template>
 
@@ -41,6 +41,9 @@
   import HomeSwiper from "./childComps/HomeSwiper.vue"
   import HomeRecommend from "./childComps/HomeRecommend.vue"
   import PopularView from "./childComps/PopularView.vue"
+
+  // 工具函数
+  import {itemListenerMixin, backTopMixin} from "common/mixin.js"
 
   // 网络请求
   import {
@@ -95,14 +98,15 @@
             list: []
           } // 页数、精选商品
         },
-        // 是否显示返回顶部
-        backTopShow: false,
         // 距离顶部的距离
         tabOffsetTop: 0,
         // 默认tabControl不需要吸顶
         isTabFixed: false,
         // 记录组件离开时的位置
         saveY: 0
+        // 监听全局$bus的组件刷新
+        // 使用混入后，可以将该变量放到混入(Mixins)中
+        // itemImgListerner: null
       }
     },
     components: {
@@ -111,7 +115,6 @@
       TabControl,
       GoodsList,
       Scroll,
-      BackTop,
       // 其它
       HomeSwiper,
       HomeRecommend,
@@ -140,7 +143,10 @@
       this.$refs.scroll.refresh()
     },
     deactivated() {
+      // 保存Y值
       this.saveY = this.$refs.scroll.getScrollY()
+      // 取消全局事件的监听
+      this.$bus.$off('itemImgLoad', this.itemImgListerner)
     },
     mounted() {
       // 将数据填充到goods: {}
@@ -151,14 +157,23 @@
       this.goods['sell'].list = [...this.floorData[2]]
 
       // refresh虽然是局部变量，但是不会被销毁，因为refresh在下面的函数中引用了，形成了闭包
-      const refresh = debounce(this.$refs.scroll.refresh, 150)
-      // 监听item图片加载完成，事件由GoodsListItem发出
-      this.$bus.$on('itemImageLoad', () => {
-        // 重新刷新，让better-scroll重新计算可滚动高度
-        // this.$refs.scroll.refresh()
-        refresh()
-      })
+      // const refresh = debounce(this.$refs.scroll.refresh, 150)
+      // // 监听item图片加载完成，事件由GoodsListItem发出
+      // this.$bus.$on('itemImageLoad', () => {
+      //   // 重新刷新，让better-scroll重新计算可滚动高度
+      //   // this.$refs.scroll.refresh()
+      //   refresh()
+      // })
+
+
+      // const refresh = debounce(this.$refs.scroll.refresh, 150)
+      // this.itemImgListerner = () => {
+      //   refresh()
+      // }
+      // this.$bus.$on('itemImgLoad', this.itemImgListerner)
+
     },
+    mixins: [itemListenerMixin,backTopMixin],
     methods: {
       /*
         事件监听
@@ -169,11 +184,13 @@
         this.goodType = index == 0 ? 'pop' : (index == 1 ? 'new' : (index == 2 ? 'sell' : 'pop'))
         // 使两个tabControl的index保持一致
         this.$refs.tabControlFixed.currentIndex = index
+        this.$refs.tabControl.currentIndex = index
       },
       // 监听 回到顶部 按钮
       contentScroll(position) {
-        // 决定 返回顶部图标 是否显示
-        this.backTopShow = position.y < -350
+        // // 决定 返回顶部图标 是否显示
+        // this.backTopShow = position.y < -1200
+        this.listenShowBackTop(position.y)
         // 决定tabControl是否吸顶(position:fixed)
         this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
@@ -222,15 +239,16 @@
         // 刷新，避免better-scroll计算的高度因为异步加载的图片还没过来而出现错误
         // this.$refs.scroll.refresh()
         this.$refs.scroll.finishPullUp()
-      },
-      // 回到顶部
-      backClick() {
-        // 拿到Scroll组件对象，并回到顶部
-        // this.$refs.scroll.scroll.scrollTo(0, 0, 1000)
-
-        // 不应该通过组件中的属性去调用组件的方法，可以通过Scroll组件中定义methods，向外提供方法调用
-        this.$refs.scroll.scrollTo(0, 0, 1000)
       }
+      // ,
+      // // 回到顶部
+      // backClick() {
+      //   // 拿到Scroll组件对象，并回到顶部
+      //   // this.$refs.scroll.scroll.scrollTo(0, 0, 1000)
+
+      //   // 不应该通过组件中的属性去调用组件的方法，可以通过Scroll组件中定义methods，向外提供方法调用
+      //   this.$refs.scroll.scrollTo(0, 0, 1000)
+      // }
     }
   }
 </script>
